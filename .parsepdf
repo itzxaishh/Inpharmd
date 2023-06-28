@@ -1,0 +1,39 @@
+import PyPDF2
+import json
+import boto3
+
+def parse_pdf(file_path):
+    with open(file_path, 'rb') as file:
+        reader = PyPDF2.PdfFileReader(file)
+        num_pages = reader.numPages
+        text = ''
+        for page in range(num_pages):
+            page_obj = reader.getPage(page)
+            text += page_obj.extractText()
+    return text
+
+def upload_json_to_s3(bucket_name, key, json_data):
+    s3 = boto3.client('s3')
+    s3.put_object(Body=json_data.encode('utf-8'), Bucket=bucket_name, Key=key)
+
+# Path to the PDF file you want to parse
+pdf_file_path = r'C:\Users\17193\Downloads\10.1007@s11239-019-01846-5.pdf'
+
+# Bucket name and key where you want to upload the JSON file
+bucket_name = 'inpharmdbucket'
+key = 'output.json'
+
+# Parse the PDF file
+parsed_text = parse_pdf(pdf_file_path)
+
+# Create a dictionary to hold the parsed text
+data = {
+    'text': parsed_text
+}
+
+# Convert dictionary to JSON
+json_data = json.dumps(data)
+
+# Upload JSON to S3
+upload_json_to_s3(bucket_name, key, json_data)
+
