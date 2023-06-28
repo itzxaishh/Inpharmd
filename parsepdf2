@@ -21,7 +21,7 @@ pdf_file_path = r'C:\Users\17193\Downloads\huang2016.pdf'
 
 # Bucket name and key where you want to upload the JSON file
 bucket_name = 'inpharmdbucket'
-key = 'output.json'
+key = huang2016.pdf
 
 # Parse the PDF file
 parsed_text = parse_pdf(pdf_file_path)
